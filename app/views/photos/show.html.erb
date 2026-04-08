@@ -17,7 +17,11 @@
     <% end %>
   <% end %>
 
-  <%= image_tag @photo.image, class: "photo-full", alt: @photo.title %>
+  <img src="<%= url_for(@photo.image) %>"
+       class="photo-full"
+       alt="<%= @photo.title %>"
+       id="photo-main"
+       onclick="openLightbox()" />
 
   <div class="photo-meta">
     <h1><%= @photo.title %></h1>
@@ -39,3 +43,27 @@
     </div>
   </div>
 </div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    </svg>
+  </button>
+  <img src="<%= url_for(@photo.image) %>" class="lightbox-img" alt="<%= @photo.title %>" onclick="event.stopPropagation()" />
+</div>
+
+<script>
+  function openLightbox() {
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
