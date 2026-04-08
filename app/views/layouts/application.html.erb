@@ -14,20 +14,63 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <nav class="nav">
-      <a href="<%= root_path %>" class="nav-brand">Photo Gallery</a>
-      <% if authenticated? %>
-        <div class="nav-actions">
-          <% if Current.user&.admin? %>
-            <%= link_to "New Album", new_folder_path, class: "btn btn-secondary" %>
-            <%= link_to "Upload Photo", new_photo_path, class: "btn btn-primary" %>
-          <% end %>
-          <span class="nav-email"><%= Current.user.username %></span>
-          <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-secondary" %>
+  <body class="<%= authenticated? ? 'with-sidebar' : '' %>">
+    <% if authenticated? %>
+      <!-- Mobile top bar -->
+      <div class="mobile-topbar">
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+        <a href="<%= root_path %>" class="mobile-brand">Photo Gallery</a>
+      </div>
+
+      <!-- Sidebar overlay (mobile) -->
+      <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <a href="<%= root_path %>" class="sidebar-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-1.1 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+            Photo Gallery
+          </a>
         </div>
-      <% end %>
-    </nav>
+
+        <nav class="sidebar-nav">
+          <%= link_to folders_path, class: "sidebar-link #{current_page?(folders_path) ? 'active' : ''}" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+              <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+            </svg>
+            Albums
+          <% end %>
+
+          <% if Current.user&.admin? %>
+            <div class="sidebar-section-label">Admin</div>
+            <%= link_to new_folder_path, class: "sidebar-link #{current_page?(new_folder_path) ? 'active' : ''}" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
+              New Album
+            <% end %>
+            <%= link_to new_photo_path, class: "sidebar-link #{current_page?(new_photo_path) ? 'active' : ''}" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+              </svg>
+              Upload Photo
+            <% end %>
+          <% end %>
+        </nav>
+
+        <div class="sidebar-footer">
+          <span class="sidebar-username"><%= Current.user.username %></span>
+          <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-secondary btn-sm btn-full" %>
+        </div>
+      </aside>
+    <% end %>
 
     <main class="main">
       <% if notice.present? %>
@@ -39,5 +82,22 @@
 
       <%= yield %>
     </main>
+
+    <% if authenticated? %>
+      <script>
+        function openSidebar() {
+          document.getElementById('sidebar').classList.add('open');
+          document.getElementById('sidebar-overlay').classList.add('active');
+        }
+        function closeSidebar() {
+          document.getElementById('sidebar').classList.remove('open');
+          document.getElementById('sidebar-overlay').classList.remove('active');
+        }
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+          const sidebar = document.getElementById('sidebar');
+          sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+        });
+      </script>
+    <% end %>
   </body>
 </html>
