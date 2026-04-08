@@ -7,6 +7,11 @@ class PhotosController < ApplicationController
   end
 
   def show
+    siblings = @photo.folder ? Photo.where(folder: @photo.folder).order(:created_at) : Photo.order(:created_at)
+    ids = siblings.pluck(:id)
+    idx = ids.index(@photo.id)
+    @prev_photo = idx > 0 ? Photo.find(ids[idx - 1]) : nil
+    @next_photo = idx < ids.length - 1 ? Photo.find(ids[idx + 1]) : nil
   end
 
   def new

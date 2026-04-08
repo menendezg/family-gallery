@@ -238,7 +238,31 @@ img { display: block; max-width: 100%; }
 .photo-show {
   max-width: 860px;
   margin: 0 auto;
+  position: relative;
 }
+
+.photo-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.photo-nav:hover {
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.photo-nav-prev { left: 1.5rem; }
+.photo-nav-next { right: 1.5rem; }
 .photo-full {
   width: 100%;
   border-radius: 10px;
