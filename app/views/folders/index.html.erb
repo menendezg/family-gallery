@@ -1,0 +1,43 @@
+<% content_for :title, "Albums" %>
+
+<div class="gallery-header">
+  <h1>Albums</h1>
+  <% if Current.user&.admin? %>
+    <%= link_to "New Album", new_folder_path, class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<% if @folders.any? %>
+  <div class="folder-grid">
+    <% @folders.each do |folder| %>
+      <div class="folder-card">
+        <%= link_to folder_path(folder), class: "folder-link" do %>
+          <div class="folder-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.5 21a3 3 0 0 0 3-3v-4.5a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3V18a3 3 0 0 0 3 3h15zM1.5 10.146V6a3 3 0 0 1 3-3h5.379a2.25 2.25 0 0 1 1.59.659l2.122 2.121c.14.141.331.22.53.22H19.5a3 3 0 0 1 3 3v1.146A4.483 4.483 0 0 0 19.5 12h-15a4.483 4.483 0 0 0-3 1.146V10.146z"/>
+            </svg>
+          </div>
+          <div class="folder-info">
+            <h2 class="folder-name"><%= folder.name %></h2>
+            <p class="folder-count"><%= pluralize(folder.photos.count, "photo") %></p>
+            <% if folder.description.present? %>
+              <p class="folder-description"><%= folder.description %></p>
+            <% end %>
+          </div>
+        <% end %>
+        <% if Current.user&.admin? %>
+          <%= button_to "Delete", folder_path(folder), method: :delete,
+              data: { turbo_confirm: "Delete this album? Photos will not be deleted." },
+              class: "btn btn-danger btn-sm" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>No albums yet.</p>
+    <% if Current.user&.admin? %>
+      <%= link_to "Create the first album", new_folder_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+<% end %>

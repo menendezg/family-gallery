@@ -1,0 +1,41 @@
+<% content_for :title, @folder.name %>
+
+<div class="gallery-header">
+  <div class="gallery-header-left">
+    <%= link_to "← Albums", folders_path, class: "back-link" %>
+    <h1><%= @folder.name %></h1>
+    <% if @folder.description.present? %>
+      <p class="folder-description-header"><%= @folder.description %></p>
+    <% end %>
+  </div>
+  <% if Current.user&.admin? %>
+    <%= link_to "Upload Photo", new_photo_path(folder_id: @folder.id), class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<% if @photos.any? %>
+  <div class="photo-grid">
+    <% @photos.each do |photo| %>
+      <div class="photo-card">
+        <%= link_to photo_path(photo) do %>
+          <%= image_tag photo.image.variant(resize_to_fill: [400, 300]), class: "photo-thumb", alt: photo.title %>
+        <% end %>
+        <div class="photo-card-body">
+          <h2 class="photo-title"><%= link_to photo.title, photo_path(photo) %></h2>
+          <% if Current.user&.admin? %>
+            <%= button_to "Delete", photo_path(photo), method: :delete,
+                data: { turbo_confirm: "Delete this photo?" },
+                class: "btn btn-danger btn-sm" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>No photos in this album yet.</p>
+    <% if Current.user&.admin? %>
+      <%= link_to "Upload the first photo", new_photo_path(folder_id: @folder.id), class: "btn btn-primary" %>
+    <% end %>
+  </div>
+<% end %>

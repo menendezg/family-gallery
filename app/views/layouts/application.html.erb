@@ -20,6 +20,7 @@
       <% if authenticated? %>
         <div class="nav-actions">
           <% if Current.user&.admin? %>
+            <%= link_to "New Album", new_folder_path, class: "btn btn-secondary" %>
             <%= link_to "Upload Photo", new_photo_path, class: "btn btn-primary" %>
           <% end %>
           <span class="nav-email"><%= Current.user.username %></span>

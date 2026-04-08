@@ -15,6 +15,14 @@
     <% end %>
 
     <div class="field">
+      <%= f.label :folder_id, "Album" %>
+      <%= f.select :folder_id,
+          options_for_select(Folder.order(:name).map { |folder| [folder.name, folder.id] }, params[:folder_id]),
+          { include_blank: "— No album —" },
+          class: "select-field" %>
+    </div>
+
+    <div class="field">
       <%= f.label :title %>
       <%= f.text_field :title, placeholder: "Photo title" %>
     </div>

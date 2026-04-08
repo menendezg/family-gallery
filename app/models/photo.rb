@@ -1,5 +1,6 @@
 class Photo < ApplicationRecord
   belongs_to :user, optional: true
+  belongs_to :folder, optional: true
 
   has_one_attached :image
 

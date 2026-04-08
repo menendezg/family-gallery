@@ -1,0 +1,32 @@
+<% content_for :title, "New Album" %>
+
+<div class="form-container">
+  <h1>New Album</h1>
+
+  <%= form_with model: @folder, class: "photo-form" do |f| %>
+    <% if @folder.errors.any? %>
+      <div class="error-list">
+        <ul>
+          <% @folder.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :name %>
+      <%= f.text_field :name, placeholder: "Album name" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :description %>
+      <%= f.text_area :description, rows: 3, placeholder: "Optional description" %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit "Create Album", class: "btn btn-primary" %>
+      <%= link_to "Cancel", folders_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>

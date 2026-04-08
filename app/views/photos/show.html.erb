@@ -10,7 +10,11 @@
     <% end %>
 
     <div class="photo-actions">
-      <%= link_to "Back to Gallery", photos_path, class: "btn btn-secondary" %>
+      <% if @photo.folder.present? %>
+        <%= link_to "Back to #{@photo.folder.name}", folder_path(@photo.folder), class: "btn btn-secondary" %>
+      <% else %>
+        <%= link_to "Back to Gallery", photos_path, class: "btn btn-secondary" %>
+      <% end %>
       <% if Current.user&.admin? %>
         <%= button_to "Delete", photo_path(@photo), method: :delete,
             data: { turbo_confirm: "Delete this photo?" },
