@@ -1,0 +1,21 @@
+<% content_for :title, @photo.title %>
+
+<div class="photo-show">
+  <%= image_tag @photo.image, class: "photo-full", alt: @photo.title %>
+
+  <div class="photo-meta">
+    <h1><%= @photo.title %></h1>
+    <% if @photo.description.present? %>
+      <p class="photo-description"><%= @photo.description %></p>
+    <% end %>
+
+    <div class="photo-actions">
+      <%= link_to "Back to Gallery", photos_path, class: "btn btn-secondary" %>
+      <% if Current.user&.admin? %>
+        <%= button_to "Delete", photo_path(@photo), method: :delete,
+            data: { turbo_confirm: "Delete this photo?" },
+            class: "btn btn-danger" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Photo Gallery" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="nav">
+      <a href="<%= root_path %>" class="nav-brand">Photo Gallery</a>
+      <% if authenticated? %>
+        <div class="nav-actions">
+          <% if Current.user&.admin? %>
+            <%= link_to "Upload Photo", new_photo_path, class: "btn btn-primary" %>
+          <% end %>
+          <span class="nav-email"><%= Current.user.username %></span>
+          <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </nav>
+
+    <main class="main">
+      <% if notice.present? %>
+        <div class="flash flash-notice"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="flash flash-alert"><%= alert %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

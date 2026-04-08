@@ -1,0 +1,32 @@
+<% content_for :title, "Gallery" %>
+
+<div class="gallery-header">
+  <h1>Gallery</h1>
+</div>
+
+<% if @photos.any? %>
+  <div class="photo-grid">
+    <% @photos.each do |photo| %>
+      <div class="photo-card">
+        <%= link_to photo_path(photo) do %>
+          <%= image_tag photo.image.variant(resize_to_fill: [400, 300]), class: "photo-thumb", alt: photo.title %>
+        <% end %>
+        <div class="photo-card-body">
+          <h2 class="photo-title"><%= link_to photo.title, photo_path(photo) %></h2>
+          <% if Current.user&.admin? %>
+            <%= button_to "Delete", photo_path(photo), method: :delete,
+                data: { turbo_confirm: "Delete this photo?" },
+                class: "btn btn-danger btn-sm" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>No photos yet.</p>
+    <% if Current.user&.admin? %>
+      <%= link_to "Upload the first photo", new_photo_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+<% end %>
